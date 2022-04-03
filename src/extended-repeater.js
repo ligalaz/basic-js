@@ -21,17 +21,17 @@ function repeater(str, options) {
   str = String(str)
 
   addition = options["addition"] || ""
-  additionSeparator = options["additionSeparator"] || ""
+  additionSeparator = options["additionSeparator"] || "|"
   additionRepeatTimes = options["additionRepeatTimes"] || 1
   separator = options["separator"] || "+"
   repeatTimes = options["repeatTimes"] || 1
 
   addition = (addition + `${additionSeparator}`)
     .repeat(additionRepeatTimes)
-    .replace(new RegExp(`${additionSeparator}$`), "")
+    .slice(0, addition.length - additionSeparator.length)
   return (str + addition + `${separator}`)
     .repeat(repeatTimes)
-    .replace(new RegExp(`\\${separator}`), "")
+    .slice(0, separator.length)
 }
 
 module.exports = {
