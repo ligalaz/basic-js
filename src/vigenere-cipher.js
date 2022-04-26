@@ -62,49 +62,79 @@ class VigenereCipheringMachine {
   }
 
   encrypt(message, key) {
-    return this
+    let crypt = true
+
+    return (this.value
+      ? this.method(message, key, crypt)
+      : this.method(message, key, crypt).reverse()
+    ).join``
   }
   decrypt(message, key) {
-    return this
+    let crypt = false
+
+    return (this.value
+      ? this.method(message, key, crypt)
+      : this.method(message, key, crypt).reverse()
+    ).join``
   }
 
-  method() {
-    if (!(message || key)) throw new Error(`Incorrect arguments!`)
-    /* SHIFRE:
+  method(message, key, crypt) {
+    if (!message || !key) throw new Error(`Incorrect arguments!`)
 
-    
-   
-    let message = 'Example of sequence: 1, 2, 3, 4.'
     message = message.toLowerCase()
-    let key = 'lilkey'
+
     key = key.toLowerCase()
     key = new Array(...key)
+
     let keyPos = new Array()
-    let mesPos =new Array(...message).map(item=>shifre[item]===undefined ? item : shifre[item])
+
+    let mesPos = new Array(...message).map((item) =>
+      this.shifre[item] === undefined ? item : this.shifre[item]
+    )
+
     let subKey
-    mesPos.forEach((item,index)=> {
-      index = index%key.length
-        keyPos.push(key[index])  
+
+    mesPos.forEach((item, index) => {
+      index = index % key.length
+      keyPos.push(key[index])
     })
-    for (let i=0; i<mesPos.length;i++) {
-      if (typeof mesPos[i] !=='number') {
-       let subKey = keyPos.slice(i,mesPos.length-1)
-       keyPos = keyPos.slice(0,i)
+
+    for (let i = 0; i < mesPos.length; i++) {
+      if (typeof mesPos[i] !== "number") {
+        let subKey = keyPos.slice(i, mesPos.length - 1)
+        keyPos = keyPos.slice(0, i)
         keyPos.push(mesPos[i])
-         keyPos=keyPos.concat(subKey)
+        keyPos = keyPos.concat(subKey)
       }
     }
-    keyPos=keyPos.map(item=>shifre[item]===undefined ? item : shifre[item])
-    
-    let encryptedMessage = mesPos.map((item,index)=>typeof item ==='number' ? (item+keyPos[index])%26 : item).
-    map(item=>(deshifre[item]===undefined || typeof item !=='number') ? item : deshifre[item]).join``
 
-    */
+    keyPos = keyPos.map((item) =>
+      this.shifre[item] === undefined ? item : this.shifre[item]
+    )
 
-    /* DESHIFRE:
-let encryptedMessage = mesPos.map((item,index)=>(typeof item ==='number' && item-keyPos[index]>=0) ? (item-keyPos[index])%26 : (typeof item ==='number' && item-keyPos[index]<0) ? (26+item-keyPos[index])%26 : item).
-map(item=>(deshifre[item]===undefined || typeof item !=='number') ? item : deshifre[item]).join``
-    */
+    return crypt === true
+      ? mesPos
+          .map((item, index) =>
+            typeof item === "number" ? (item + keyPos[index]) % 26 : item
+          )
+          .map((item) =>
+            this.deshifre[item] === undefined || typeof item !== "number"
+              ? item
+              : this.deshifre[item]
+          )
+      : mesPos
+          .map((item, index) =>
+            typeof item === "number" && item - keyPos[index] >= 0
+              ? (item - keyPos[index]) % 26
+              : typeof item === "number" && item - keyPos[index] < 0
+              ? (26 + item - keyPos[index]) % 26
+              : item
+          )
+          .map((item) =>
+            this.deshifre[item] === undefined || typeof item !== "number"
+              ? item
+              : this.deshifre[item]
+          )
   }
 }
 
